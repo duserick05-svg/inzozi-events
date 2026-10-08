@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inzozi Events — Wedding venues & vendors in Rwanda (prototype)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#0F4C3A; --green-2:#16614b; --gold:#C99A2E; --ink:#232323;
+  --muted:#5f625c; --paper:#ffffff; --sand:#F2EDE4; --line:#e3ddd2;
+  --chip:#ffffff; --card:#ffffff; --onGreen:#ffffff;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --green:#3f9c7d; --green-2:#58b393; --gold:#e0b552; --ink:#f1efe9;
+    --muted:#b3b2ab; --paper:#141714; --sand:#1d211d; --line:#30352f;
+    --chip:#1d211d; --card:#1a1e1a; --onGreen:#0d120f;
+  }
+}
+:root[data-theme="dark"]{
+  --green:#3f9c7d; --green-2:#58b393; --gold:#e0b552; --ink:#f1efe9;
+  --muted:#b3b2ab; --paper:#141714; --sand:#1d211d; --line:#30352f;
+  --chip:#1d211d; --card:#1a1e1a; --onGreen:#0d120f;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5}
+h1,h2,h3{font-family:Marcellus,Georgia,"Times New Roman",serif;font-weight:400;margin:0}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+
+.demo{background:var(--gold);color:#1b1608;font-size:14px;text-align:center;padding:6px 12px}
+header.top{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+.brand{font-family:Marcellus,Georgia,serif;font-size:26px;color:var(--green);text-decoration:none}
+.brand small{font-family:Figtree,sans-serif;font-size:13px;color:var(--muted);margin-left:6px}
+.listbtn{border:1px solid var(--line);background:transparent;border-radius:999px;padding:7px 14px;font-size:14px;cursor:pointer}
+
+.hero{background:var(--green);color:#fff;border-radius:22px;overflow:hidden;position:relative}
+.hero-in{padding:34px 24px 26px;position:relative;z-index:1}
+.hero h1{font-size:clamp(32px,7vw,54px);line-height:1.08;max-width:14ch}
+.hero p{max-width:46ch;opacity:.9;margin:12px 0 20px}
+.band{display:block;width:100%;height:34px}
+.search{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;background:#fff;border-radius:16px;padding:8px;color:#232323}
+.search label{display:flex;flex-direction:column;font-size:12px;color:#5f625c;padding:4px 10px}
+.search select,.search input{border:0;background:transparent;font-size:16px;padding:2px 0;color:#232323;min-width:0}
+.search button{background:var(--gold);border:0;border-radius:12px;padding:0 18px;font-weight:600;color:#1b1608;cursor:pointer}
+@media (max-width:560px){.search{grid-template-columns:1fr 1fr}.search button{grid-column:1/-1;padding:12px}}
+
+.cats{display:flex;gap:8px;overflow-x:auto;padding:22px 0 6px;scrollbar-width:none}
+.cats::-webkit-scrollbar{display:none}
+.cat{flex:0 0 auto;border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:8px 14px;cursor:pointer;white-space:nowrap;font-size:15px}
+.cat[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.cat span{opacity:.6;margin-left:4px;font-size:13px}
+
+details.filters{margin:12px 0 4px;border:1px solid var(--line);border-radius:14px;background:var(--sand)}
+details.filters summary{cursor:pointer;padding:12px 16px;font-weight:600;list-style:none;display:flex;justify-content:space-between}
+details.filters summary::-webkit-details-marker{display:none}
+details.filters summary::after{content:"+";font-weight:400}
+details.filters[open] summary::after{content:"–"}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;padding:0 16px 16px}
+.fgrid label{display:flex;flex-direction:column;font-size:13px;color:var(--muted);gap:4px}
+.fgrid select{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:9px 10px;color:var(--ink)}
+.fgrid .check{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:15px;padding-top:18px}
+.fgrid input[type=checkbox]{width:20px;height:20px;accent-color:var(--green)}
+
+.resulthead{display:flex;justify-content:space-between;align-items:baseline;margin:20px 0 12px}
+.resulthead h2{font-size:26px}
+.resulthead p{margin:0;color:var(--muted);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;padding-bottom:40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;cursor:pointer;text-align:left;padding:0;display:flex;flex-direction:column}
+.card:hover .ph{filter:saturate(1.15)}
+.ph{aspect-ratio:4/3;display:grid;place-items:center;position:relative;background-size:cover}
+.ph .ico{font-size:44px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.25))}
+.ph .count{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;border-radius:999px;padding:3px 9px}
+.verified{position:absolute;left:10px;top:10px;background:#fff;color:#0F4C3A;font-size:12px;font-weight:600;border-radius:999px;padding:4px 10px}
+.cbody{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px}
+.cbody h3{font-size:21px;line-height:1.2}
+.where{color:var(--muted);font-size:14px}
+.facts{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.fact{background:var(--sand);border-radius:8px;padding:3px 8px;font-size:13px}
+.price{font-weight:700;margin-top:4px}
+.empty{grid-column:1/-1;border:1px dashed var(--line);border-radius:18px;padding:30px;text-align:center;color:var(--muted)}
+.empty button{margin-top:10px;background:var(--green);color:var(--onGreen);border:0;border-radius:10px;padding:10px 16px;cursor:pointer}
+
+dialog{border:0;padding:0;border-radius:22px;max-width:640px;width:calc(100% - 24px);background:var(--paper);color:var(--ink);max-height:92vh}
+dialog::backdrop{background:rgba(10,20,15,.6)}
+.dclose{position:absolute;right:12px;top:12px;z-index:2;background:rgba(0,0,0,.55);color:#fff;border:0;border-radius:999px;width:38px;height:38px;font-size:20px;cursor:pointer}
+.gallery{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.gallery::-webkit-scrollbar{display:none}
+.gallery .ph{flex:0 0 100%;scroll-snap-align:start;aspect-ratio:16/10}
+.dbody{padding:20px 22px 24px}
+.dbody h2{font-size:30px;line-height:1.15}
+.spec{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:16px 0}
+.spec div{background:var(--paper);padding:10px 12px}
+.spec dt{font-size:12px;color:var(--muted)}
+.spec dd{margin:2px 0 0;font-weight:600}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.wa{background:#1f9d55;color:#fff;text-decoration:none;border-radius:12px;padding:12px 18px;font-weight:600;flex:1 1 200px;text-align:center}
+.map{border:1px solid var(--line);color:var(--ink);text-decoration:none;border-radius:12px;padding:12px 18px;text-align:center;flex:1 1 140px}
+.note{font-size:13px;color:var(--muted);margin-top:14px}
+footer{border-top:1px solid var(--line);padding:22px 0 30px;color:var(--muted);font-size:14px}
+@media (prefers-reduced-motion:no-preference){.card{transition:transform .15s}.card:active{transform:scale(.99)}}
+</style>
+</head>
+<body>
+<div class="demo">Prototype with sample listings. Names and numbers are not real.</div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#">Inzozi Events<small>Rwanda</small></a>
+    <button class="listbtn" id="listBtn">List your business</button>
+  </header>
+
+  <section class="hero" aria-label="Search">
+    <svg class="band" viewBox="0 0 400 34" preserveAspectRatio="none" aria-hidden="true">
+      <defs><pattern id="imi" width="40" height="34" patternUnits="userSpaceOnUse">
+        <path d="M0 34 L20 4 L40 34" fill="none" stroke="#C99A2E" stroke-width="5"/>
+        <path d="M0 34 L20 18 L40 34" fill="none" stroke="#ffffff" stroke-opacity=".55" stroke-width="3"/>
+      </pattern></defs>
+      <rect width="400" height="34" fill="url(#imi)"/>
+    </svg>
+    <div class="hero-in">
+      <h1>Find your wedding venue and team</h1>
+      <p>Venues, photographers, decorators, DJs, MCs, caterers and more across Rwanda. Every listing is visited and checked by our team.</p>
+      <form class="search" id="heroSearch" onsubmit="return false">
+        <label>District
+          <select id="hDistrict"></select>
+        </label>
+        <label>Guests
+          <select id="hGuests">
+            <option value="0">Any number</option>
+            <option value="100">100+</option>
+            <option value="300">300+</option>
+            <option value="500">500+</option>
+            <option value="800">800+</option>
+          </select>
+        </label>
+        <button type="button" id="hGo">Search venues</button>
+      </form>
+    </div>
+  </section>
+
+  <nav class="cats" id="cats" aria-label="Categories"></nav>
+
+  <details class="filters" id="filters">
+    <summary>Filters</summary>
+    <div class="fgrid" id="fgrid"></div>
+  </details>
+
+  <div class="resulthead">
+    <h2 id="rTitle">Venues</h2>
+    <p id="rCount"></p>
+  </div>
+  <div class="grid" id="grid"></div>
+
+  <footer>Inzozi Events prototype. Built to test the layout before connecting the real database.</footer>
+</div>
+
+<dialog id="dlg" aria-label="Listing details">
+  <div style="position:relative">
+    <button class="dclose" id="dClose" aria-label="Close">×</button>
+    <div class="gallery" id="dGallery"></div>
+  </div>
+  <div class="dbody" id="dBody"></div>
+</dialog>
+
+<script>
+const CATS = [
+  {id:"venue",label:"Venues",ico:"🏛️"},
+  {id:"photo",label:"Photographers",ico:"📷"},
+  {id:"decor",label:"Decorators",ico:"💐"},
+  {id:"dj",label:"DJs",ico:"🎧"},
+  {id:"mc",label:"MCs",ico:"🎤"},
+  {id:"catering",label:"Caterers",ico:"🍽️"},
+  {id:"serving",label:"Serving staff",ico:"🥂"},
+  {id:"cake",label:"Cakes",ico:"🎂"},
+  {id:"beauty",label:"Hair & makeup",ico:"💄"},
+  {id:"florist",label:"Florists",ico:"🌸"},
+  {id:"transport",label:"Wedding cars",ico:"🚗"},
+  {id:"attire",label:"Mushanana & attire",ico:"👗"},
+  {id:"intore",label:"Intore dancers",ico:"🥁"},
+  {id:"sound",label:"Sound & lighting",ico:"💡"}
+];
+const DISTRICTS = ["Gasabo","Kicukiro","Nyarugenge","Bugesera","Musanze","Rubavu","Huye"];
+const WA = "250788000000";
+
+const VENUES = [
+  {name:"Jardin des Collines",district:"Gasabo",area:"Kibagabaga",capacity:600,priceMin:2500000,priceMax:4500000,parking:120,setting:"Both",catering:"Bring your own",ceremonies:["Gusaba","Reception"],photos:12},
+  {name:"Nyarutarama Garden Hall",district:"Gasabo",area:"Nyarutarama",capacity:900,priceMin:4000000,priceMax:7000000,parking:200,setting:"Outdoor",catering:"Included",ceremonies:["Gusaba","Civil","Reception"],photos:15},
+  {name:"Akagera View Terrace",district:"Kicukiro",area:"Gahanga",capacity:350,priceMin:1200000,priceMax:2200000,parking:60,setting:"Outdoor",catering:"Bring your own",ceremonies:["Gusaba","Reception"],photos:9},
+  {name:"Ikirezi Event Centre",district:"Kicukiro",area:"Kicukiro Centre",capacity:1000,priceMin:3000000,priceMax:5500000,parking:0,setting:"Indoor",catering:"Included",ceremonies:["Reception"],photos:10},
+  {name:"Umurage Hall",district:"Nyarugenge",area:"Nyamirambo",capacity:400,priceMin:900000,priceMax:1600000,parking:40,setting:"Indoor",catering:"Bring your own",ceremonies:["Gusaba","Reception"],photos:7},
+  {name:"Lake Kivu Shores Garden",district:"Rubavu",area:"Gisenyi",capacity:500,priceMin:2000000,priceMax:3800000,parking:90,setting:"Outdoor",catering:"Included",ceremonies:["Gusaba","Civil","Reception"],photos:14},
+  {name:"Virunga Lodge Lawn",district:"Musanze",area:"Kinigi",capacity:200,priceMin:1800000,priceMax:3000000,parking:50,setting:"Both",catering:"Included",ceremonies:["Civil","Reception"],photos:11},
+  {name:"Bugesera Lakeside Gardens",district:"Bugesera",area:"Nyamata",capacity:700,priceMin:1500000,priceMax:2800000,parking:150,setting:"Outdoor",catering:"Bring your own",ceremonies:["Gusaba","Reception"],photos:8},
+  {name:"Huye Heritage Hall",district:"Huye",area:"Ngoma",capacity:450,priceMin:800000,priceMax:1400000,parking:70,setting:"Indoor",catering:"Bring your own",ceremonies:["Gusaba","Reception"],photos:6}
+];
+const VENDORS = [
+  {cat:"photo",name:"Lens of Kigali Studio",areas:["Gasabo","Kicukiro","Nyarugenge"],priceFrom:600000,blurb:"Photo and video, drone, same-week highlights.",photos:15},
+  {cat:"photo",name:"Imena Moments",areas:["Kigali (all)","Musanze","Rubavu"],priceFrom:450000,blurb:"Documentary style, full gusaba coverage.",photos:12},
+  {cat:"decor",name:"Umutako Decor",areas:["Kigali (all)","Bugesera"],priceFrom:800000,blurb:"Gusaba stage, imigongo-inspired backdrops.",photos:14},
+  {cat:"decor",name:"Golden Petal Events",areas:["Gasabo","Kicukiro"],priceFrom:1200000,blurb:"Full reception styling and tents.",photos:10},
+  {cat:"dj",name:"DJ Inzozi",areas:["Kigali (all)"],priceFrom:250000,blurb:"Afrobeat, gospel, and Rwandan classics.",photos:6},
+  {cat:"dj",name:"Kivu Sound DJs",areas:["Rubavu","Musanze"],priceFrom:200000,blurb:"Sound system included.",photos:5},
+  {cat:"mc",name:"MC Ganza",areas:["Kigali (all)","Huye"],priceFrom:300000,blurb:"Bilingual Kinyarwanda and English.",photos:5},
+  {cat:"mc",name:"MC Uwase",areas:["Kigali (all)"],priceFrom:250000,blurb:"Gusaba and reception, trilingual.",photos:4},
+  {cat:"catering",name:"Isangano Catering",areas:["Kigali (all)","Bugesera"],priceFrom:9000,unit:"per guest",blurb:"Buffet, local and continental.",photos:9},
+  {cat:"catering",name:"Mama Keza Kitchen",areas:["Nyarugenge","Kicukiro"],priceFrom:7000,unit:"per guest",blurb:"Traditional Rwandan menu.",photos:7},
+  {cat:"serving",name:"Abakozi Serving Team",areas:["Kigali (all)"],priceFrom:15000,unit:"per waiter",blurb:"Uniformed waiters and ushers.",photos:5},
+  {cat:"cake",name:"Sweet Ihirwe Cakes",areas:["Kigali (all)"],priceFrom:150000,blurb:"Tiered cakes, tasting included.",photos:10},
+  {cat:"beauty",name:"Glow by Ineza",areas:["Kigali (all)"],priceFrom:120000,blurb:"Bride and bridesmaids, home visits.",photos:12},
+  {cat:"florist",name:"Indabo Florals",areas:["Gasabo","Kicukiro"],priceFrom:100000,blurb:"Bouquets and table flowers.",photos:8},
+  {cat:"transport",name:"Royal Rides Rwanda",areas:["Kigali (all)"],priceFrom:200000,unit:"per car",blurb:"Decorated cars with driver.",photos:6},
+  {cat:"attire",name:"Mushanana House",areas:["Kigali (all)","Huye"],priceFrom:80000,blurb:"Mushanana rental and tailoring.",photos:11},
+  {cat:"intore",name:"Intore z'Umurage",areas:["Kigali (all)","Bugesera"],priceFrom:400000,blurb:"Traditional troupe for gusaba.",photos:6},
+  {cat:"sound",name:"Lumière Event Tech",areas:["Kigali (all)"],priceFrom:350000,blurb:"PA, stage lighting, screens.",photos:7}
+];
+
+const state = {cat:"venue", district:"", guests:0, maxPrice:0, parking:false, setting:"", catering:""};
+const $ = id => document.getElementById(id);
+const fmt = n => n>=1000000 ? (n/1000000).toFixed(n%1000000?1:0)+"M" : n>=1000 ? Math.round(n/1000)+"k" : String(n);
+const rwf = n => "RWF " + fmt(n);
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+const HUES = [[15,76,58],[110,60,40],[150,90,40],[60,80,110],[120,50,70],[30,95,90]];
+function placeholder(seed, ico, i){
+  const h = HUES[(seed+i)%HUES.length], g = HUES[(seed+i+2)%HUES.length];
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='80' height='60'><path d='M0 60 L20 30 L40 60 L60 30 L80 60' fill='none' stroke='rgba(255,255,255,.12)' stroke-width='6'/></svg>`;
+  return `background-image:url("data:image/svg+xml,${encodeURIComponent(svg)}"),linear-gradient(135deg,rgb(${h}),rgb(${g}))`;
+}
+const seedOf = s => [...s].reduce((a,c)=>a+c.charCodeAt(0),0);
+
+function buildChips(){
+  $("cats").innerHTML = CATS.map(c=>{
+    const n = c.id==="venue" ? VENUES.length : VENDORS.filter(v=>v.cat===c.id).length;
+    return `<button class="cat" data-cat="${c.id}" aria-pressed="${state.cat===c.id}">${c.ico} ${c.label}<span>${n}</span></button>`;
+  }).join("");
+  $("cats").querySelectorAll(".cat").forEach(b=>b.onclick=()=>{state.cat=b.dataset.cat;buildChips();buildFilters();render();});
+}
+function opt(v,l,cur){return `<option value="${v}" ${String(cur)===String(v)?"selected":""}>${l}</option>`}
+function buildFilters(){
+  const d = `<label>District<select data-k="district">${opt("","All districts",state.district)}${DISTRICTS.map(x=>opt(x,x,state.district)).join("")}</select></label>`;
+  if(state.cat==="venue"){
+    $("fgrid").innerHTML = d +
+      `<label>Guests<select data-k="guests">${[0,100,300,500,800].map(x=>opt(x,x?x+"+":"Any",state.guests)).join("")}</select></label>`+
+      `<label>Budget (up to)<select data-k="maxPrice">${opt(0,"Any",state.maxPrice)}${[1500000,2500000,4000000,7000000].map(x=>opt(x,rwf(x),state.maxPrice)).join("")}</select></label>`+
+      `<label>Setting<select data-k="setting">${opt("","Any",state.setting)}${["Indoor","Outdoor","Both"].map(x=>opt(x,x,state.setting)).join("")}</select></label>`+
+      `<label>Catering<select data-k="catering">${opt("","Any",state.catering)}${["Included","Bring your own"].map(x=>opt(x,x,state.catering)).join("")}</select></label>`+
+      `<label class="check"><input type="checkbox" data-k="parking" ${state.parking?"checked":""}> Has parking</label>`;
+  } else {
+    $("fgrid").innerHTML = d +
+      `<label>Starting price (up to)<select data-k="maxPrice">${opt(0,"Any",state.maxPrice)}${[100000,300000,600000,1200000].map(x=>opt(x,rwf(x),state.maxPrice)).join("")}</select></label>`;
+  }
+  $("fgrid").querySelectorAll("[data-k]").forEach(el=>el.onchange=()=>{
+    const k=el.dataset.k; state[k]= el.type==="checkbox"?el.checked : (["guests","maxPrice"].includes(k)?+el.value:el.value);
+    if(k==="district") $("hDistrict").value=state.district;
+    if(k==="guests") $("hGuests").value=state.guests;
+    render();
+  });
+}
+function covers(v,d){return !d || v.areas.includes(d) || (["Gasabo","Kicukiro","Nyarugenge"].includes(d) && v.areas.includes("Kigali (all)"));}
+function results(){
+  if(state.cat==="venue") return VENUES.filter(v=>
+    (!state.district||v.district===state.district)&&v.capacity>=state.guests&&
+    (!state.maxPrice||v.priceMin<=state.maxPrice)&&(!state.parking||v.parking>0)&&
+    (!state.setting||v.setting===state.setting)&&(!state.catering||v.catering===state.catering));
+  return VENDORS.filter(v=>v.cat===state.cat&&covers(v,state.district)&&(!state.maxPrice||v.priceFrom<=state.maxPrice));
+}
+function render(){
+  const c = CATS.find(x=>x.id===state.cat), list = results();
+  $("rTitle").textContent = c.label + (state.district?" in "+state.district:"");
+  $("rCount").textContent = list.length + (list.length===1?" listing":" listings");
+  if(!list.length){
+    $("grid").innerHTML = `<div class="empty">No ${c.label.toLowerCase()} match these filters.<br><button id="clr">Clear filters</button></div>`;
+    $("clr").onclick=()=>{Object.assign(state,{district:"",guests:0,maxPrice:0,parking:false,setting:"",catering:""});$("hDistrict").value="";$("hGuests").value="0";buildFilters();render();};
+    return;
+  }
+  $("grid").innerHTML = list.map((v,i)=>{
+    const s=seedOf(v.name);
+    const facts = state.cat==="venue"
+      ? `<span class="fact">${v.capacity} guests</span><span class="fact">${v.setting}</span><span class="fact">${v.parking?"Parking "+v.parking+" cars":"No parking"}</span>`
+      : `<span class="fact">${esc(v.areas.join(", "))}</span>`;
+    const where = state.cat==="venue" ? `${esc(v.area)}, ${esc(v.district)}` : esc(v.blurb);
+    const price = state.cat==="venue" ? `${rwf(v.priceMin)} – ${fmt(v.priceMax)}` : `From ${rwf(v.priceFrom)}${v.unit?" "+v.unit:""}`;
+    return `<button class="card" data-i="${i}">
+      <div class="ph" style="${placeholder(s,c.ico,0)}"><span class="verified">✓ Verified</span><span class="ico">${c.ico}</span><span class="count">${v.photos} photos</span></div>
+      <div class="cbody"><h3>${esc(v.name)}</h3><div class="where">${where}</div><div class="facts">${facts}</div><div class="price">${price}</div></div></button>`;
+  }).join("");
+  $("grid").querySelectorAll(".card").forEach(b=>b.onclick=()=>open(list[+b.dataset.i]));
+}
+function open(v){
+  const c = CATS.find(x=>x.id===state.cat), s=seedOf(v.name), isV = state.cat==="venue";
+  const n = Math.min(v.photos,5);
+  $("dGallery").innerHTML = Array.from({length:n},(_,i)=>`<div class="ph" style="${placeholder(s,c.ico,i)}"><span class="ico">${c.ico}</span><span class="count">Photo ${i+1} of ${v.photos}</span></div>`).join("");
+  const msg = encodeURIComponent(`Hello, I found ${v.name} on Inzozi Events and I'd like a quote for my wedding.`);
+  const spec = isV ? [
+      ["Location",`${v.area}, ${v.district}`],["Guests",`Up to ${v.capacity}`],
+      ["Price",`${rwf(v.priceMin)} – ${fmt(v.priceMax)}`],["Parking",v.parking?`Yes, about ${v.parking} cars`:"No parking on site"],
+      ["Setting",v.setting],["Catering",v.catering],["Ceremonies",v.ceremonies.join(", ")],["Photos",v.photos]
+    ] : [
+      ["Category",c.label],["Covers",v.areas.join(", ")],["Starting price",`${rwf(v.priceFrom)}${v.unit?" "+v.unit:""}`],["Portfolio",v.photos+" photos"]
+    ];
+  $("dBody").innerHTML = `<h2>${esc(v.name)}</h2>
+    <div class="where">${isV?esc(v.area+", "+v.district):esc(v.blurb)}</div>
+    <dl class="spec">${spec.map(([k,val])=>`<div><dt>${k}</dt><dd>${esc(val)}</dd></div>`).join("")}</dl>
+    <div class="actions">
+      <a class="wa" target="_blank" rel="noopener" href="https://wa.me/${WA}?text=${msg}">Ask for a quote on WhatsApp</a>
+      ${isV?`<a class="map" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(v.area+", "+v.district+", Rwanda")}">Open map</a>`:""}
+    </div>
+    <p class="note">✓ Visited and verified by the Inzozi Events team.</p>`;
+  $("dlg").showModal();
+}
+$("dClose").onclick=()=>$("dlg").close();
+$("dlg").addEventListener("click",e=>{if(e.target===$("dlg"))$("dlg").close();});
+$("listBtn").onclick=()=>alert("Coming later: venues and vendors will create their own account here. For now, our field team adds listings.");
+$("hDistrict").innerHTML = opt("","All districts","")+DISTRICTS.map(x=>opt(x,x,"")).join("");
+$("hGo").onclick=()=>{state.cat="venue";state.district=$("hDistrict").value;state.guests=+$("hGuests").value;buildChips();buildFilters();render();$("rTitle").scrollIntoView({behavior:"smooth"});};
+
+buildChips();buildFilters();render();
+</script>
+</body>
+</html>
