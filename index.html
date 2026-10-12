@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
+<script>try{var t=localStorage.getItem('inzozi-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -44,9 +45,11 @@ nav.links a:hover{color:var(--rose)}
 .btn{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:10px 18px;font-weight:600;font-size:15px;cursor:pointer;text-decoration:none;border:1px solid transparent}
 .btn.rose{background:var(--rose);color:var(--onRose)}
 .btn.line{border-color:var(--ink);color:var(--ink);background:transparent}
-@media (max-width:760px){nav.links{display:none}header .btn.line{padding:8px 14px;font-size:14px;white-space:nowrap}.brand{font-size:25px}}
+@media (max-width:760px){nav.links{display:none}header .btn.line{padding:7px 12px;font-size:13px;white-space:nowrap}.brand{font-size:22px}.topin{gap:8px}.right{gap:8px}.themebtn{width:36px;height:36px;font-size:16px}}
 
-.hero{background:var(--soft);border-bottom:1px solid var(--line)}
+.hero{background:var(--paper);border-bottom:1px solid var(--line)}
+.themebtn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--paper);cursor:pointer;font-size:18px;display:grid;place-items:center;flex:0 0 auto}
+.right{display:flex;align-items:center;gap:10px}
 .heroin{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding-top:56px;padding-bottom:60px}
 .hero h1{font-size:clamp(40px,6.4vw,68px);line-height:1.02}
 .hero p.lead{color:var(--muted);font-size:18px;max-width:44ch;margin:16px 0 28px}
@@ -150,7 +153,10 @@ dialog::backdrop{background:rgba(20,16,18,.55)}
       <a href="#browse" data-go="photo">Vendors</a>
       <a href="#how">How it works</a>
     </nav>
-    <a class="btn line" href="#business">List your business</a>
+    <div class="right">
+      <button class="themebtn" id="themeBtn" type="button" aria-label="Switch to dark mode">🌙</button>
+      <a class="btn line" href="#business">List your business</a>
+    </div>
   </div>
 </header>
 
@@ -368,6 +374,9 @@ $("hDistrict").innerHTML=opt("","All of Rwanda","")+DISTRICTS.map(x=>opt(x,x,"")
 $("hGo").onclick=()=>{state.cat=$("hCat").value;state.district=$("hDistrict").value;state.guests=state.cat==="venue"?+$("hGuests").value:0;buildCats();buildPills();render();$("rTitle").scrollIntoView({behavior:"smooth"});};
 document.querySelectorAll("[data-go]").forEach(a=>a.addEventListener("click",()=>setCat(a.dataset.go)));
 $("bizBtn").href=`https://wa.me/${WA}?text=${encodeURIComponent("Hello Inzozi Events, I'd like to list my business for free.")}`;
+function syncThemeBtn(){const d=document.documentElement.getAttribute('data-theme')==='dark';$("themeBtn").textContent=d?"☀️":"🌙";$("themeBtn").setAttribute("aria-label",d?"Switch to light mode":"Switch to dark mode");}
+$("themeBtn").onclick=()=>{const next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('inzozi-theme',next);}catch(e){}syncThemeBtn();};
+syncThemeBtn();
 buildCats();buildPills();render();
 </script>
 </body>
